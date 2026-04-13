@@ -1,6 +1,6 @@
-export default function LoginComponent()
+export default function SignUpComponent()
 {
- return <form action="/api/login" method="POST">
+         return <form action="/api/signUp" method="POST">
   Email: <input name="email" />
   <br />Password: <input name="password" type="password" /><br/>
   <button type="submit">Login</button>
