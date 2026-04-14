@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log(email,password);
+  console.log(`attempting to log ${email} in`);
   if (email === null)
     return NextResponse.redirect(new URL("/error?message=missing_or_invalid_email",req.url));
   if (password === null)

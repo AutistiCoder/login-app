@@ -8,15 +8,19 @@ const formData = await req.formData();
 
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log(email,password);
+  console.log(`attempting to sign ${email} up`);
   if (email === null)
-    return NextResponse.redirect("/error?message=missing_or_invalid_email");
+    return NextResponse.redirect(
+  new URL("/error?message=missing_or_invalid_email", req.url)
+);
   if (password === null)
-    return NextResponse.redirect("/error?message=missing_or_invalid_password");
-const salt = 1; // for greater security, don't hardcode like I am doing here - this is for demo purposes only
+    return NextResponse.redirect(
+  new URL("/error?message=missing_or_invalid_password", req.url)
+);
+const saltLength = 10;
   try
   {
-    const passwordHash = await bcrypt.hash(password as string,salt);
+    const passwordHash = await bcrypt.hash(password as string,saltLength);
     const result = await sql`INSERT INTO users (email, password_hash) VALUES (${email as string},${passwordHash})`;
     
     return NextResponse.redirect(new URL("/?loggedIn=true", req.url));
