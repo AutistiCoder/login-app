@@ -22,8 +22,20 @@ const saltLength = 10;
   {
     const passwordHash = await bcrypt.hash(password as string,saltLength);
     const result = await sql`INSERT INTO users (email, password_hash) VALUES (${email as string},${passwordHash})`;
-    
-    return NextResponse.redirect(new URL("/?loggedIn=true", req.url));
+        // create a new session 
+    const session = {id: crypto.randomUUID(),userEmail:email as string};
+    await sql`
+  INSERT INTO sessions (session_id, user_email)
+  VALUES (${session.id}, ${session.userEmail})
+`;
+// respond with the session ID as as a cookie
+    const response = NextResponse.redirect(new URL("/", req.url));
+response.cookies.set("sessionId", session.id, {
+  httpOnly: true,
+  sameSite: "lax",
+  path: "/",
+});
+return response;
   }
   catch (e)
   {

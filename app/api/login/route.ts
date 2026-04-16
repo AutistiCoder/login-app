@@ -23,7 +23,22 @@ export async function POST(req: Request) {
   results.rows[0].password_hash
 );
   if (isValid)
-    return NextResponse.redirect(new URL("/?loggedIn=true", req.url));
+  {
+    // create a new session 
+    const session = {id: crypto.randomUUID(),userEmail:email as string};
+    await sql`
+  INSERT INTO sessions (session_id, user_email)
+  VALUES (${session.id}, ${session.userEmail})
+`;
+// respond with the session ID as as a cookie
+    const response = NextResponse.redirect(new URL("/", req.url));
+response.cookies.set("sessionId", session.id, {
+  httpOnly: true,
+  sameSite: "lax",
+  path: "/",
+});
+return response;
+  }
   else
     return NextResponse.redirect(new URL("/error?message=missing_or_invalid_password",req.url));
 }
