@@ -27,9 +27,14 @@ export default async function Home() {
         <a href="/login">Log In</a>
         <br />
         <a href="/signUp">Sign Up</a>
-      </div>
+        
+        </div>
     );
   }
 
-  return <div>Welcome, {results.rows[0].user_email}!</div>;
+  return <div>
+    
+        <a href="/api/logOut">Log Out</a>
+        <br />
+    Welcome, {results.rows[0].user_email}!</div>;
 }
